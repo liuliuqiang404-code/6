@@ -659,12 +659,12 @@ local Paragraph = Tab:Paragraph({
                 if setclipboard then
                     setclipboard(cardKey)
                     WindUI:Notify({
-                        Title = "卡密复制",
-                        Content = "卡密已复制到剪贴板: " .. cardKey,
+                        Title = "复制",
+                        Content = "已复制到剪贴板: " .. cardKey,
                         Icon = "crown",
                         Duration = 5
                     })
-                    print("卡密已复制: " .. cardKey)
+                    print("已复制: " .. cardKey)
                 else
                     WindUI:Notify({
                         Title = "错误",
@@ -1101,6 +1101,20 @@ local Tab = Window:Tab({
     Title = "偷走脑红",
     Icon = "crown",
     Locked = false,
+})
+
+local Button = Tab:Button({
+    Title = "目前没有做",
+    Desc = "若实在想玩，请向刘某反馈",
+    Locked = false,
+    Callback = function()
+        WindUI:Notify({
+            Title = "你点啥",
+            Content = "说了没做",
+            Icon = "crown",
+            Duration = 3
+        })
+    end
 })
 
 local Tab = Window:Tab({
