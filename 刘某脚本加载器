@@ -1041,36 +1041,6 @@ local Tab = Window:Tab({
     Locked = false,
 })
 
-local Button = Tab:Button({
-    Title = "最强脚本",
-    Desc = "汉化",
-    Locked = false,
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/342423114514/-/refs/heads/main/qq1038849170%20(1).txt"))()
-        WindUI:Notify({
-            Title = "好用",
-            Content = "可以",
-            Icon = "crown",
-            Duration = 3
-        })
-    end
-})
-
-local Button = Tab:Button({
-    Title = "私服",
-    Desc = "偷走脑红",
-    Locked = false,
-    Callback = function()
-          loadstring(game:HttpGet("https://raw.githubusercontent.com/yoursvexyyy/VEX-OP/refs/heads/main/free%20server%20finder"))()
-        WindUI:Notify({
-            Title = "好用",
-            Content = "可以",
-            Icon = "crown",
-            Duration = 3
-        })
-    end
-})
-
 local Tab = Window:Tab({
     Title = "自然灾害",
     Icon = "crown",
