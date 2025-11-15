@@ -1,0 +1,253 @@
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+
+local loadingScreen = Instance.new("ScreenGui")
+loadingScreen.Name = "透明加载动画"
+loadingScreen.Parent = playerGui
+
+
+local background = Instance.new("Frame")
+background.Size = UDim2.new(1, 0, 1, 0)
+background.BackgroundTransparency = 1
+background.BorderSizePixel = 0
+background.Parent = loadingScreen
+
+
+local container = Instance.new("Frame")
+container.Size = UDim2.new(0, 500, 0, 200)
+container.Position = UDim2.new(0.5, -250, 0.5, -100)
+container.BackgroundTransparency = 1
+container.Parent = background
+
+
+local textData = {
+    {text = "刘"},
+    {text = "某"}, 
+    {text = "脚"},
+    {text = "本"}
+}
+
+local textLabels = {}
+
+local neonColors = {
+    Color3.fromHex("#00FF88"), 
+    Color3.fromHex("#FF0088"), 
+    Color3.fromHex("#0088FF"), 
+    Color3.fromHex("#88FF00"), 
+    Color3.fromHex("#FF8800"), 
+    Color3.fromHex("#8800FF")  
+}
+
+for i, data in ipairs(textData) do
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Name = "文字_" .. i
+    textLabel.Size = UDim2.new(0, 80, 0, 80)
+    textLabel.Position = UDim2.new(0.5, -160 + (i-1)*90, 0.5, -40)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Text = data.text
+    textLabel.TextColor3 = neonColors[1] 
+    textLabel.TextScaled = true
+    textLabel.TextStrokeTransparency = 0
+    textLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    textLabel.Font = Enum.Font.GothamBlack
+    textLabel.TextSize = 48
+    textLabel.Visible = false
+    textLabel.Parent = container
+    
+    local neonGlow = Instance.new("UIStroke")
+    neonGlow.Color = neonColors[1]
+    neonGlow.Thickness = 3
+    neonGlow.Transparency = 0.3
+    neonGlow.Enabled = false
+    neonGlow.Parent = textLabel
+    
+    textLabels[i] = textLabel
+end
+
+local progressBarBg = Instance.new("Frame")
+progressBarBg.Size = UDim2.new(0.8, 0, 0, 6)
+progressBarBg.Position = UDim2.new(0.1, 0, 0.85, 0)
+progressBarBg.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+progressBarBg.BackgroundTransparency = 0.7
+progressBarBg.BorderSizePixel = 0
+progressBarBg.Parent = container
+
+local progressBarCorner = Instance.new("UICorner")
+progressBarCorner.CornerRadius = UDim.new(1, 0)
+progressBarCorner.Parent = progressBarBg
+
+
+local progressBar = Instance.new("Frame")
+progressBar.Size = UDim2.new(0, 0, 1, 0)
+progressBar.BackgroundColor3 = Color3.fromHex("#00FF88")
+progressBar.BorderSizePixel = 0
+progressBar.Parent = progressBarBg
+
+local progressCorner = Instance.new("UICorner")
+progressCorner.CornerRadius = UDim.new(1, 0)
+progressCorner.Parent = progressBar
+
+local function startNeonColorCycle()
+    for i, textLabel in ipairs(textLabels) do
+        spawn(function()
+            local neonGlow = textLabel:FindFirstChildOfClass("UIStroke")
+            local colorIndex = i
+            
+            while textLabel.Parent do
+               
+                colorIndex = colorIndex + 1
+                if colorIndex > #neonColors then
+                    colorIndex = 1
+                end
+                
+                local newColor = neonColors[colorIndex]
+                
+              
+                local colorTween = TweenService:Create(textLabel, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                    TextColor3 = newColor
+                })
+                
+                if neonGlow then
+                    local glowTween = TweenService:Create(neonGlow, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                        Color = newColor
+                    })
+                    glowTween:Play()
+                end
+                
+                colorTween:Play()
+                wait(0.8)
+            end
+        end)
+    end
+end
+
+local function createTypewriterAnimation(textLabel, index)
+    textLabel.Visible = true
+    
+   
+    textLabel.TextTransparency = 1
+    textLabel.Position = UDim2.new(0.5, -160 + (index-1)*90, 0.5, -20)
+    
+   
+    local fadeInTween = TweenService:Create(textLabel, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        TextTransparency = 0,
+        Position = UDim2.new(0.5, -160 + (index-1)*90, 0.5, -40)
+    })
+    
+    
+    local neonGlow = textLabel:FindFirstChildOfClass("UIStroke")
+    if neonGlow then
+        neonGlow.Enabled = true
+    end
+    
+    fadeInTween:Play()
+end
+
+
+local function startBreathingGlow()
+    for i, textLabel in ipairs(textLabels) do
+        spawn(function()
+            local neonGlow = textLabel:FindFirstChildOfClass("UIStroke")
+            
+            while textLabel.Parent do
+                local glowTween1 = TweenService:Create(neonGlow, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                    Transparency = 0.1,
+                    Thickness = 4
+                })
+                local glowTween2 = TweenService:Create(neonGlow, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                    Transparency = 0.4,
+                    Thickness = 2
+                })
+                
+                glowTween1:Play()
+                glowTween1.Completed:Wait()
+                glowTween2:Play()
+                glowTween2.Completed:Wait()
+            end
+        end)
+    end
+end
+
+local function loadNextScript()
+    print("开始加载主脚本...")
+    
+    local nextScriptUrl = "https://raw.githubusercontent.com/liuliuqiang404-code/6/refs/heads/main/%E5%88%98%E6%9F%90%E8%84%9A%E6%9C%AC%E5%8A%A0%E8%BD%BD%E5%99%A81"
+    
+    -- 安全加载脚本
+    local success, result = pcall(function()
+        return loadstring(game:HttpGet(nextScriptUrl))()
+    end)
+    
+    if success then
+        print("主脚本加载成功！")
+    else
+        warn("主脚本加载失败: " .. tostring(result))
+        
+    end
+end
+
+
+local function startLoadingAnimation()
+    
+    for i, textLabel in ipairs(textLabels) do
+        wait(0.3)
+        createTypewriterAnimation(textLabel, i)
+    end
+    
+    
+    wait(0.5)
+    startNeonColorCycle()  
+    startBreathingGlow()   
+    
+    
+    local progressTween = TweenService:Create(progressBar, TweenInfo.new(3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Size = UDim2.new(1, 0, 1, 0)
+    })
+    progressTween:Play()
+    
+   
+    progressTween.Completed:Connect(function()
+        print("加载动画完成，开始加载主脚本...")
+        loadNextScript()
+    end)
+    
+    
+    wait(3.5)
+    
+   
+    for _, textLabel in ipairs(textLabels) do
+        local textFadeTween = TweenService:Create(textLabel, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            TextTransparency = 1
+        })
+        textFadeTween:Play()
+        
+        local neonGlow = textLabel:FindFirstChildOfClass("UIStroke")
+        if neonGlow then
+            local glowFadeTween = TweenService:Create(neonGlow, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Transparency = 1
+            })
+            glowFadeTween:Play()
+        end
+    end
+    
+    local progressFadeTween = TweenService:Create(progressBarBg, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        BackgroundTransparency = 1
+    })
+    
+    progressFadeTween:Play()
+    
+    
+    wait(1.5)
+    loadingScreen:Destroy()
+    print("加载界面已关闭")
+end
+
+
+startLoadingAnimation()
+
+print("透明背景霓虹加载动画开始！")
