@@ -1,3 +1,4 @@
+--我的脚本由ai辅助制作用ai写我觉得没什么ai发明出来就是教人做事的我跟着ai自学也学了一些lua基础我写这段话就是想让你们别骂我了脚本没加密的原因就是不想让你们一直要重复去复制脚本代码我实际还是加密了
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local Lighting = game:GetService("Lighting")
